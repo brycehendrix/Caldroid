@@ -1254,11 +1254,6 @@ public class CaldroidFragment extends DialogFragment {
         // Show navigation arrows depend on initial arguments
         setShowNavigationArrows(showNavigationArrows);
 
-        // For the weekday gridview ("SUN, MON, TUE, WED, THU, FRI, SAT")
-        weekdayGridView = (GridView) view.findViewById(R.id.weekday_gridview);
-        WeekdayArrayAdapter weekdaysAdapter = getNewWeekdayAdapter();
-        weekdayGridView.setAdapter(weekdaysAdapter);
-
         // Setup all the pages of date grid views. These pages are recycled
         setupDateGridPages(view);
 
@@ -1366,9 +1361,11 @@ public class CaldroidFragment extends DialogFragment {
 
         for (int i = 0; i < NUMBER_OF_PAGES; i++) {
             DateGridFragment dateGridFragment = fragments.get(i);
+            WeekdayArrayAdapter weekdaysAdapter = getNewWeekdayAdapter();
             CaldroidGridAdapter adapter = datePagerAdapters.get(i);
             dateGridFragment.setGridViewRes(getGridViewRes());
-            dateGridFragment.setGridAdapter(adapter);
+            dateGridFragment.setWeekdayGridAdapter(weekdaysAdapter);
+            dateGridFragment.setMonthGridAdapter(adapter);
             dateGridFragment.setOnItemClickListener(getDateItemClickListener());
             dateGridFragment
                     .setOnItemLongClickListener(getDateItemLongClickListener());

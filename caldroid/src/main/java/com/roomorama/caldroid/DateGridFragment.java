@@ -21,8 +21,11 @@ import com.caldroid.R;
  * @author thomasdao
  */
 public class DateGridFragment extends Fragment {
-    private GridView gridView;
-    private CaldroidGridAdapter gridAdapter;
+    private View rootView;
+    private GridView weekGridView;
+    private GridView monthGridView;
+    private CaldroidGridAdapter monthGridAdapter;
+    private WeekdayArrayAdapter weekdayGridAdapter;
     private OnItemClickListener onItemClickListener;
     private OnItemLongClickListener onItemLongClickListener;
     private int gridViewRes = 0;
@@ -44,16 +47,24 @@ public class DateGridFragment extends Fragment {
         this.onItemLongClickListener = onItemLongClickListener;
     }
 
-    public CaldroidGridAdapter getGridAdapter() {
-        return gridAdapter;
+    public CaldroidGridAdapter getMonthGridAdapter() {
+        return monthGridAdapter;
     }
 
-    public void setGridAdapter(CaldroidGridAdapter gridAdapter) {
-        this.gridAdapter = gridAdapter;
+    public void setMonthGridAdapter(CaldroidGridAdapter gridAdapter) {
+        this.monthGridAdapter = gridAdapter;
     }
 
-    public GridView getGridView() {
-        return gridView;
+    public void setWeekdayGridAdapter(WeekdayArrayAdapter gridAdapter) {
+        this.weekdayGridAdapter = gridAdapter;
+    }
+
+    public GridView getMonthGridView() {
+        return monthGridView;
+    }
+
+    public GridView getWeekGridView() {
+        return weekGridView;
     }
 
     public void setGridViewRes(int gridViewRes) {
@@ -66,15 +77,19 @@ public class DateGridFragment extends Fragment {
         // Client normally needs to provide the adapter and onItemClickListener
         // before the fragment is attached to avoid complex crash due to
         // fragment life cycles
-        if (gridAdapter != null) {
-            gridView.setAdapter(gridAdapter);
+        if (monthGridAdapter != null) {
+            monthGridView.setAdapter(monthGridAdapter);
         }
 
         if (onItemClickListener != null) {
-            gridView.setOnItemClickListener(onItemClickListener);
+            monthGridView.setOnItemClickListener(onItemClickListener);
         }
         if (onItemLongClickListener != null) {
-            gridView.setOnItemLongClickListener(onItemLongClickListener);
+            monthGridView.setOnItemLongClickListener(onItemLongClickListener);
+        }
+
+        if (weekdayGridAdapter != null) {
+            weekGridView.setAdapter(weekdayGridAdapter);
         }
     }
 
@@ -88,24 +103,27 @@ public class DateGridFragment extends Fragment {
         }
 
         if (themeResource == 0) {
-            if (gridAdapter != null) {
-                themeResource = gridAdapter.getThemeResource();
+            if (monthGridAdapter != null) {
+                themeResource = monthGridAdapter.getThemeResource();
             }
         }
 
-        if (gridView == null) {
+        if (rootView == null) {
             LayoutInflater localInflater = CaldroidFragment.getLayoutInflater(getActivity(),
                     inflater, themeResource);
-            gridView = (GridView) localInflater.inflate(gridViewRes, container, false);
+
+            rootView = localInflater.inflate(gridViewRes, container, false);
+            weekGridView = (GridView) rootView.findViewById(R.id.weekday_gridview);
+            monthGridView = (GridView) rootView.findViewById(R.id.calendar_gridview);
             setupGridView();
         } else {
-            ViewGroup parent = (ViewGroup) gridView.getParent();
+            ViewGroup parent = (ViewGroup) rootView.getParent();
             if (parent != null) {
-                parent.removeView(gridView);
+                parent.removeView(rootView);
             }
         }
 
-        return gridView;
+        return rootView;
     }
 
 }
